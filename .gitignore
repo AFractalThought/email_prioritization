@@ -1,0 +1,6 @@
+.env
+.gradio
+.ipynb_checkpoints/
+artifacts/
+.cache/
+.gradio
