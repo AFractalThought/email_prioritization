@@ -1,6 +1,12 @@
 .env
-.gradio
-.ipynb_checkpoints/
-artifacts/
-.cache/
-.gradio
+.env.*
+!.env.example
+
+**/.gradio/
+**/.cache/
+**/.ipynb_checkpoints/
+**/artifacts/
+**/__pycache__/
+
+# notebooks
+*.ipynb
