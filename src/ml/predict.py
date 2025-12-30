@@ -1,6 +1,7 @@
 from sklearn.pipeline import Pipeline
 import pandas as pd
 import numpy as np
+from typing import Tuple
 
 def probabilities_and_labels(model: Pipeline, X: pd.DataFrame) -> pd.DataFrame:
     predictions = model.predict(X)
@@ -9,7 +10,7 @@ def probabilities_and_labels(model: Pipeline, X: pd.DataFrame) -> pd.DataFrame:
     proba_df = pd.DataFrame(probabilities, columns=classes, index=X.index)
     return predictions, proba_df
 
-def predict_one(model: Pipeline, subject, body) -> pd.DataFrame:
+def predict_one(model: Pipeline, subject: str, body: str) -> tuple[str, pd.Series]:
     X = pd.DataFrame([{
         "subject": subject or "",
         "body": body or "",
