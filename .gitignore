@@ -10,3 +10,4 @@
 
 # notebooks
 *.ipynb
+!train_upload_notebook.ipynb
