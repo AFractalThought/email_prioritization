@@ -25,7 +25,7 @@ def get_model():
         bucket="models",
         object_path="resend/v1/pipeline.joblib",
         local_path=".cache/pipeline.joblib",
-        force=False,  # set True only if you overwrite the same remote object_path
+        force=False,  # set True only if retraining
     )
     return joblib.load(lp)
 
@@ -36,14 +36,12 @@ def get_raw_df(limit: int = 20000) -> pd.DataFrame:
 
 @lru_cache(maxsize=1)
 def get_eval_split():
-    """
-    Fixed split so your performance tab is stable / reproducible.
-    """
+  
     df = get_raw_df()
-    X, y = pre_process.prepare_xy(df)  # your dedupe + fillna + type coercion
+    X, y = pre_process.prepare_xy(df)  #  deduplication, fill na
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.40, random_state=37, stratify=y
-    )
+        X, y, test_size=0.25, random_state=37, stratify=y
+    ) # fixed split
     return X_train, X_test, y_train, y_test
 
 # ----------------------------
@@ -62,7 +60,7 @@ def ui_predict_one(subject: str, body: str):
     else:
         probs_dict = dict(probs)
 
-    # Reasons -> markdown bullets
+    # Reasons
     reasons_md = "\n".join([f"- {r}" for r in reasons]) if reasons else "_No strong features found._"
 
     return (
@@ -118,7 +116,7 @@ with gr.Blocks(title="Email Classifier Demo") as demo:
 **Data source:** [jason23322/high-accuracy-email-classifier](https://huggingface.co/datasets/jason23322/high-accuracy-email-classifier)  
 **License:** Apache-2.0  
 
-For training details, evaluation methodology, and how predictions/reasons are computed, see the project **README**.
+For training details, evaluation methodology, and how predictions/reasons are computed, see the **README**.
 """
     )
 
