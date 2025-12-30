@@ -76,6 +76,6 @@ src/
 
 - View performance metrics in the **Performance** tab of the [Gradio app](https://cb98c60b53059edaf6.gradio.live/).
 - Evaluation uses a seeded **stratified train/test split** 
-  - PR-AUC (Average Precision)** + PR curve (threshold-independent)
+  - **PR-AUC (Average Precision)** + PR curve (threshold-independent)
   - **Confusion matrix (counts)** under the **argmax** decision policy
 - More details: [Writeup: Evaluation](writeup.md#evaluation)
