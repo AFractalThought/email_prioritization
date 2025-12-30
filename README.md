@@ -38,6 +38,7 @@ Use the **Simulate email event** tab in the [Gradio app](https://cb98c60b53059ed
  > Note: `src/app.py` may use `demo.launch(share=True)` for public demos. For local-only runs, set `share=False` or remove the argument.
 
 #### Prereqs
+
 - Python 3.11+ (tested on Python 3.12)
   
 - Supabase project credentials in a local `.env` file (see `.env.example`).
@@ -54,6 +55,7 @@ python3 src/app.py
 ```text
 src/
   app.py                 # Gradio UI
+  train_upload_notebook.ipynb # where model is trained and uploaded to supabase
   ml/
     train.py             # model construction / training helpers
     predict.py           # prediction + reasoning helpers
