@@ -1,4 +1,5 @@
 # Data Scientist Trust & Safety Take Home Challenge — Write Up
+This document summarizes the key implementation decisions behind the submission: dataset selection and label mapping, model/features, confidence + reasoning definitions, evaluation choices, and storage/deployment setup.
 
 ## Dataset selection
 
@@ -10,19 +11,15 @@ I initially explored the dataset included in the prompt, but it introduced sever
 - **Label mismatch with task:** Labels were `ham/spam`, while the assignment requires `priority/default/slow`. I could have generated new labels, but under time constraints it was more reliable to use a dataset whose categories already aligned with the goal.
 
 ### Why I chose the Hugging Face dataset
-I used the Hugging Face dataset `jason23322/high-accuracy-email-classifier` (Apache-2.0):
+I used a [a dataset obtained from Hugging Face](https://huggingface.co/datasets/jason23322/high-accuracy-email-classifier) `jason23322/high-accuracy-email-classifier` (Apache-2.0):
 
 - The dataset’s categories map directly to the assignment’s required classes (especially verification codes).
 - The examples are more internally coherent (subject/body alignment is generally consistent).
 - Duplication exists (as in most datasets) but is manageable; I explicitly **de-duplicate identical subject/body pairs** before splitting to reduce leakage risk.
 
-**Source:** https://huggingface.co/datasets/jason23322/high-accuracy-email-classifier
-
 ### Caveats / limitations of the chosen dataset
 - The dataset is still **simulated**, so performance is not representative of real email traffic.
 - It does **not include a sender field**. I realize the assignment specifically mentions using `from` (available in the provided dataset). I chose not to fabricate sender values or mix in another dataset due to scope/complexity, and because subject/body alone were sufficient to demonstrate the approach.
-
----
 
 ## Label mapping
 
@@ -35,7 +32,8 @@ I used the Hugging Face dataset `jason23322/high-accuracy-email-classifier` (Apa
 |---|---|---|
 | **Prioritize** | MFA codes / verification           | `verify_code`                     |
 | **Default**    | Generic messages                   | `social_media`, `forum`, `updates`|
-| **Slow**       | Non-urgent promotional messages    | `promotions`                      |
+| **Slow**       | Non-urgent promotional messages    | `promotions`  
+| **(Spam*)**       | NOT included in assignment    | `spam`                      |
 
 ### Why I included `spam` as an extra class
 The assignment defines three labels, but the dataset contains a clear spam category. I kept `spam` as a separate label instead of dropping it or mapping it into `slow`, because in a realistic pipeline you’d rather route obvious spam away from the inbox than treat it as “slow.” This makes the demo more practical, and the model still outputs probabilities across all classes.
@@ -54,7 +52,7 @@ I used **TF–IDF** features for the `subject` and `body`.
 I used **multinomial Logistic Regression**.
 
 - Logistic regression is interpretable, fast, and a good baseline for text classification.
-- I did not run hyperparameter tuning (e.g., grid search) under time constraints; the goal was a clean, understandable pipeline and working demo.
+- I did not run hyperparameter tuning (e.g., grid search) under time constraints; the goal was a clean, understandable pipeline and working demo or explore other model choices
 
 ### Decision policy
 The model outputs probabilities for each label via `predict_proba`.
@@ -109,14 +107,13 @@ I used **Gradio** because it supports:
 - easy visualization of plots and dataframes
 - simple deployment patterns
 
----
 
 ## How the system works end-to-end
 
 ### Training (local)
 - Fetch training data from Supabase
-- Preprocess (fill missing text, de-duplicate, split)
-- Train TF–IDF + Logistic Regression pipeline
+- Preprocess (de-duplicate, split)
+- Vectorize text with TF–IDF + Logistic Regression pipeline
 - Save model artifact locally (`joblib`)
 - Upload artifact to Supabase Storage
 
@@ -128,16 +125,16 @@ I used **Gradio** because it supports:
   - **Performance:** computes confusion matrix + PR curve / macro PR-AUC on a fixed split
   - **Dataframe:** displays a preview of the dataset
 
----
 
-## Notes on real-world performance
+## Notes on real-world performance and model building
 The model performs well on this simulated dataset, but performance will drop on real email traffic due to:
 - broader vocabulary and writing styles
 - adversarial spam behavior
 - distribution shifts (new templates, new senders, different user contexts)
 
 A production-grade version would require:
-- real email logs (with privacy safeguards)
+- real emails
 - better calibration + thresholding policies
 - continuous evaluation / monitoring
 - richer features including sender domain reputation and message metadata
+- trying multiple models, and policies, hyperparameter tuning
