@@ -2,7 +2,7 @@
 
 Train and serve an email prioritization model with a Gradio UI for interactive predictions, metrics, and dataset preview.
 
-[Live app](https://cb98c60b53059edaf6.gradio.live/)
+[Live app](https://46ccf31bbf1fadf8e8.gradio.live/)
 
 ## Table of Contents
 
@@ -31,7 +31,7 @@ This project includes:
 
 ### UI
 
-Use the **Simulate email event** tab in the [Gradio app](https://cb98c60b53059edaf6.gradio.live/): paste an email `subject` + `body` to get a prediction.
+Use the **Simulate email event** tab in the [app](https://46ccf31bbf1fadf8e8.gradio.live/): paste an email `subject` + `body` to get a prediction.
 
 ### Local Configuration
 
@@ -70,13 +70,13 @@ src/
 
 - [Public source dataset](https://huggingface.co/datasets/jason23322/high-accuracy-email-classifier) used for training
   - See details in [Writeup: dataset selection](writeup.md#dataset-selection)
-  - View dataset preview in **Dataframe** tab in [Gradio app](https://cb98c60b53059edaf6.gradio.live/)
+  - View dataset preview in **Dataframe** tab in [Gradio app](https://46ccf31bbf1fadf8e8.gradio.live/)
 - For the demo app, the processed dataset is mirrored into Supabase and trained model is stored in Supabase Storage 
   - See details in [Writeup: storage selection](writeup.md#storage-and-deployment-choices)
 
 ## Evaluation
 
-- View performance metrics in the **Performance** tab of the [Gradio app](https://cb98c60b53059edaf6.gradio.live/).
+- View performance metrics in the **Performance** tab of the [Gradio app](https://46ccf31bbf1fadf8e8.gradio.live/).
 - Evaluation uses a seeded **stratified train/test split** 
   - **PR-AUC (Average Precision)** + PR curve (threshold-independent)
   - **Confusion matrix (counts)** under the **argmax** decision policy
