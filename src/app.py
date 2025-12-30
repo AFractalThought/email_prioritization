@@ -116,7 +116,8 @@ with gr.Blocks(title="Email Classifier Demo") as demo:
 **Data source:** [jason23322/high-accuracy-email-classifier](https://huggingface.co/datasets/jason23322/high-accuracy-email-classifier)  
 **License:** Apache-2.0  
 
-For training details, evaluation methodology, and how predictions/reasons are computed, see the **README**.
+For training details, evaluation methodology, and how predictions/reasons are computed, see the **README** in 
+[repo](https://github.com/AFractalThought/email_prioritization)
 """
     )
 
